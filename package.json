@@ -1,6 +1,6 @@
 {
   "name": "aws-sns-publish",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Publish messages to AWS SNS",
   "license": "MIT",
   "repository": "SamVerschueren/aws-sns-publish",
@@ -10,7 +10,7 @@
     "url": "github.com/SamVerschueren"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=8"
   },
   "scripts": {
     "test": "xo && nyc ava",
@@ -28,16 +28,18 @@
     "is-aws-account-id": "^1.0.0",
     "is-e164-phone-number": "^1.0.0",
     "is-obj": "^1.0.0",
-    "is-sns-topic-arn": "^1.0.0",
-    "pify": "^2.3.0"
+    "is-sns-topic-arn": "^1.0.0"
   },
   "devDependencies": {
-    "ava": "*",
-    "aws-sdk": "^2.2.33",
+    "ava": "^0.25.0",
+    "aws-sdk": "^2.610.0",
     "coveralls": "^2.13.0",
     "nyc": "^10.2.0",
-    "sinon": "^1.17.2",
-    "xo": "*"
+    "sinon": "^8.1.1",
+    "xo": "^0.25.3"
+  },
+  "peerDependencies": {
+    "aws-sdk": "^2.610.0"
   },
   "nyc": {
     "exclude": [

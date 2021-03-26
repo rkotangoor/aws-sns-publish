@@ -1,6 +1,6 @@
 import test from 'ava';
 import sns from './fixtures/stub-sns';
-import m from './';
+import m from '.';
 
 test.beforeEach(() => {
 	delete process.env.AWS_ACCOUNT_ID;
@@ -77,5 +77,95 @@ test.serial('phone, topic and subject', async t => {
 		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
 		PhoneNumber: '+14155552671',
 		Subject: 'MySubject'
+	});
+});
+
+test.serial('message attributes - string', async t => {
+	await m(JSON.stringify({foo: 'foo'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: 'bar'}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"foo"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'String',
+				StringValue: 'bar'
+			}
+		}
+	});
+});
+
+test.serial('message attributes - string array', async t => {
+	await m(JSON.stringify({foo: 'bar'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: ['bar']}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"bar"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'String.Array',
+				StringValue: '["bar"]'
+			}
+		}
+	});
+});
+
+test.serial('message attributes - number', async t => {
+	await m(JSON.stringify({foo: 'bar'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: 0}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"bar"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'Number',
+				StringValue: '0'
+			}
+		}
+	});
+});
+
+test.serial('message attributes - number array', async t => {
+	await m(JSON.stringify({foo: 'bar'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: [0]}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"bar"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'String.Array',
+				StringValue: '[0]'
+			}
+		}
+	});
+});
+
+test.serial('message attributes - boolean', async t => {
+	await m(JSON.stringify({foo: 'bar'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: true}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"bar"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'String',
+				StringValue: 'true'
+			}
+		}
+	});
+});
+
+test.serial('message attributes - boolean array', async t => {
+	await m(JSON.stringify({foo: 'bar'}), {arn: 'arn:aws:sns:us-west-2:111122223333:MyTopic', json: true, attributes: {bar: [true]}});
+
+	t.deepEqual(sns.publish.lastCall.args[0], {
+		Message: '{"foo":"bar"}',
+		TopicArn: 'arn:aws:sns:us-west-2:111122223333:MyTopic',
+		MessageAttributes: {
+			bar: {
+				DataType: 'String.Array',
+				StringValue: '[true]'
+			}
+		}
 	});
 });
